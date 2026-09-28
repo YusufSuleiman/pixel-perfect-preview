@@ -12,9 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedCashRouteImport } from './routes/_authenticated/cash'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedHoldingsRouteImport } from './routes/_authenticated/holdings'
+import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedTransactionsRouteImport } from './routes/_authenticated/transactions'
+import { Route as AuthenticatedStocksTickerRouteImport } from './routes/_authenticated/stocks.$ticker'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -30,6 +34,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedCashRoute = AuthenticatedCashRouteImport.update({
+  id: '/cash',
+  path: '/cash',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -40,49 +49,99 @@ const AuthenticatedHoldingsRoute = AuthenticatedHoldingsRouteImport.update({
   path: '/holdings',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedReportsRoute = AuthenticatedReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedTransactionsRoute =
   AuthenticatedTransactionsRouteImport.update({
     id: '/transactions',
     path: '/transactions',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedStocksTickerRoute =
+  AuthenticatedStocksTickerRouteImport.update({
+    id: '/stocks/$ticker',
+    path: '/stocks/$ticker',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/cash': typeof AuthenticatedCashRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/holdings': typeof AuthenticatedHoldingsRoute
+  '/reports': typeof AuthenticatedReportsRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
+  '/stocks/$ticker': typeof AuthenticatedStocksTickerRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/cash': typeof AuthenticatedCashRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/holdings': typeof AuthenticatedHoldingsRoute
+  '/reports': typeof AuthenticatedReportsRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
+  '/stocks/$ticker': typeof AuthenticatedStocksTickerRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/cash': typeof AuthenticatedCashRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/holdings': typeof AuthenticatedHoldingsRoute
+  '/_authenticated/reports': typeof AuthenticatedReportsRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/transactions': typeof AuthenticatedTransactionsRoute
+  '/_authenticated/stocks/$ticker': typeof AuthenticatedStocksTickerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/dashboard' | '/holdings' | '/transactions'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/cash'
+    | '/dashboard'
+    | '/holdings'
+    | '/reports'
+    | '/settings'
+    | '/transactions'
+    | '/stocks/$ticker'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/dashboard' | '/holdings' | '/transactions'
+  to:
+    | '/'
+    | '/auth'
+    | '/cash'
+    | '/dashboard'
+    | '/holdings'
+    | '/reports'
+    | '/settings'
+    | '/transactions'
+    | '/stocks/$ticker'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/cash'
     | '/_authenticated/dashboard'
     | '/_authenticated/holdings'
+    | '/_authenticated/reports'
+    | '/_authenticated/settings'
     | '/_authenticated/transactions'
+    | '/_authenticated/stocks/$ticker'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -114,6 +173,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/cash': {
+      id: '/_authenticated/cash'
+      path: '/cash'
+      fullPath: '/cash'
+      preLoaderRoute: typeof AuthenticatedCashRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -128,6 +194,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedHoldingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/reports': {
+      id: '/_authenticated/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AuthenticatedReportsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/transactions': {
       id: '/_authenticated/transactions'
       path: '/transactions'
@@ -135,19 +215,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTransactionsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/stocks/$ticker': {
+      id: '/_authenticated/stocks/$ticker'
+      path: '/stocks/$ticker'
+      fullPath: '/stocks/$ticker'
+      preLoaderRoute: typeof AuthenticatedStocksTickerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCashRoute: typeof AuthenticatedCashRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedHoldingsRoute: typeof AuthenticatedHoldingsRoute
+  AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedTransactionsRoute: typeof AuthenticatedTransactionsRoute
+  AuthenticatedStocksTickerRoute: typeof AuthenticatedStocksTickerRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCashRoute: AuthenticatedCashRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedHoldingsRoute: AuthenticatedHoldingsRoute,
+  AuthenticatedReportsRoute: AuthenticatedReportsRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedTransactionsRoute: AuthenticatedTransactionsRoute,
+  AuthenticatedStocksTickerRoute: AuthenticatedStocksTickerRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
