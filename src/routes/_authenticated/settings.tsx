@@ -41,11 +41,11 @@ function SettingsPage() {
   }, [settings]);
 
   async function save() {
-    if (!user) return;
+    if (!user) return undefined;
     const buy = Number(form.default_buy_commission_rate);
     const sell = Number(form.default_sell_commission_rate);
-    if (!form.account_name.trim()) return toast.error("Account name is required");
-    if (!(buy >= 0 && buy <= 10) || !(sell >= 0 && sell <= 10)) return toast.error("Commission rates must be 0–10%");
+    if (!form.account_name.trim()) { toast.error("Account name is required"); return; }
+    if (!(buy >= 0 && buy <= 10) || !(sell >= 0 && sell <= 10)) { toast.error("Commission rates must be 0–10%"); return; }
     setSaving(true);
     const { error } = await supabase.from("settings").upsert(
       {
@@ -60,7 +60,7 @@ function SettingsPage() {
       { onConflict: "user_id" },
     );
     setSaving(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Settings saved");
     refresh();
   }

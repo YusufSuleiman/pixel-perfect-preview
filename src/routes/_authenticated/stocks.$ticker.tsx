@@ -36,7 +36,7 @@ function StockDetail() {
   return (
     <div>
       <Link to="/holdings" className="text-muted-foreground text-sm hover:underline">← Holdings</Link>
-      <PageHeader title={p.ticker} description={p.company ?? undefined} />
+      <PageHeader title={p.ticker} {...(p.company ? { description: p.company } : {})} />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Stat label="Shares held" value={num(p.shares, 4)} />
         <Stat label="Average cost" value={money(p.avgCost, currency)} />
