@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { DEFAULT_SETTINGS, usePortfolio, useRefreshPortfolio } from "@/lib/portfolio-data";
 import type { CostBasisMethod } from "@/lib/accounting";
+import { BackupPanel } from "@/components/BackupPanel";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
@@ -103,6 +104,7 @@ function SettingsPage() {
         </div>
         <Button onClick={save} disabled={saving}>{saving ? "Saving…" : "Save settings"}</Button>
       </div>
+      <BackupPanel />
     </div>
   );
 }
