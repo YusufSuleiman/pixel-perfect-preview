@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, Stat } from "@/components/Stat";
 import { usePortfolio } from "@/lib/portfolio-data";
 import { money, num, pct } from "@/lib/format";
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 export const Route = createFileRoute("/_authenticated/stocks/$ticker")({
   head: ({ params }) => ({
@@ -47,6 +48,45 @@ function StockDetail() {
         <Stat label="Commissions" value={money(p.totalCommission, currency)} accent="fee" />
         <Stat label="Funded by" value={`${money(p.capitalInvested, currency)} capital`} hint={`${money(p.profitInvested, currency)} reinvested profit`} />
       </div>
+
+      {trades.length > 0 && (() => {
+        let cum = 0;
+        const series = [...trades].reverse().map((e) => {
+          cum += e.realizedNet;
+          return { date: e.date, price: e.transaction?.price ?? 0, avgCost: e.after.avgCost || null, shares: e.after.shares, realized: cum };
+        });
+        return (
+          <div className="mt-6 grid gap-4 lg:grid-cols-2">
+            <div className="panel p-4">
+              <h3 className="mb-2 text-sm font-medium">Trade price vs average cost</h3>
+              <ResponsiveContainer width="100%" height={220}>
+                <LineChart data={series}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                  <XAxis dataKey="date" fontSize={11} stroke="var(--muted-foreground)" />
+                  <YAxis fontSize={11} stroke="var(--muted-foreground)" domain={["auto", "auto"]} />
+                  <Tooltip contentStyle={{ background: "var(--popover)", border: "1px solid var(--border)" }} />
+                  <Line type="monotone" dataKey="price" name="Trade price" stroke="var(--primary)" dot />
+                  <Line type="stepAfter" dataKey="avgCost" name="Avg cost" stroke="var(--muted-foreground)" strokeDasharray="4 4" dot={false} connectNulls />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="panel p-4">
+              <h3 className="mb-2 text-sm font-medium">Shares held & cumulative realized P/L</h3>
+              <ResponsiveContainer width="100%" height={220}>
+                <LineChart data={series}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                  <XAxis dataKey="date" fontSize={11} stroke="var(--muted-foreground)" />
+                  <YAxis yAxisId="s" fontSize={11} stroke="var(--muted-foreground)" />
+                  <YAxis yAxisId="r" orientation="right" fontSize={11} stroke="var(--muted-foreground)" />
+                  <Tooltip contentStyle={{ background: "var(--popover)", border: "1px solid var(--border)" }} />
+                  <Line yAxisId="s" type="stepAfter" dataKey="shares" name="Shares" stroke="var(--primary)" dot={false} />
+                  <Line yAxisId="r" type="stepAfter" dataKey="realized" name="Realized P/L" stroke="var(--gain)" dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        );
+      })()}
 
       <div className="panel mt-6 overflow-x-auto">
         <table className="w-full text-sm">
