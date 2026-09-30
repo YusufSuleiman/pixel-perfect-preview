@@ -8,6 +8,13 @@
       "when": 1790433812448,
       "tag": "0000_investment_ledger_core",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790727214610,
+      "tag": "0001_create_portfolio_ai_conversations",
+      "breakpoints": true
     }
   ]
 }
