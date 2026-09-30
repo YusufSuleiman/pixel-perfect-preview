@@ -15,6 +15,13 @@
       "when": 1790727214610,
       "tag": "0001_create_portfolio_ai_conversations",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790727279390,
+      "tag": "0002_dedupe_portfolio_ai_messages",
+      "breakpoints": true
     }
   ]
 }

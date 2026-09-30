@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX ai_messages_user_conversation_sdk_id_idx ON public.ai_messages(user_id, conversation_id, sdk_message_id) WHERE sdk_message_id IS NOT NULL;
