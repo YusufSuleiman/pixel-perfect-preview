@@ -2,7 +2,7 @@ import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieCh
 import type { AccountingResult } from "@/lib/accounting";
 import { money } from "@/lib/format";
 
-const COLORS = ["var(--primary)", "var(--gain)", "var(--chart-3, #d9a441)", "var(--chart-4, #6b8fd6)", "var(--chart-5, #c46b9b)", "var(--muted-foreground)"];
+const COLORS = ["var(--primary)", "var(--gain)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)", "var(--muted-foreground)"];
 const tip = { background: "var(--popover)", border: "1px solid var(--border)", borderRadius: 8, fontSize: 12 };
 
 export function DashboardCharts({ accounting, currency }: { accounting: AccountingResult; currency: string }) {

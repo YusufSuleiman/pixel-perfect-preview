@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- AI conversation history is stored per authenticated account and each thread is addressed by its route ID, because messages must remain isolated and reloadable.
+- Portfolio AI requests recompute accounting server-side from the raw owner-scoped ledger, because model explanations must use the same auditable source data as the interface.

@@ -6,6 +6,7 @@ import {
   FileText,
   LayoutDashboard,
   ListOrdered,
+  MessageCircleMore,
   LogOut,
   Menu,
   Moon,
@@ -28,6 +29,7 @@ const NAV = [
   { to: "/transactions", label: "Transactions", icon: ListOrdered },
   { to: "/cash", label: "Cash", icon: Wallet },
   { to: "/reports", label: "Reports", icon: FileText },
+  { to: "/assistant", label: "AI Assistant", icon: MessageCircleMore },
   { to: "/settings", label: "Settings", icon: SettingsIcon },
 ] as const;
 

@@ -5,6 +5,7 @@ import { PageHeader, SectionTitle, Stat } from "@/components/Stat";
 import { Button } from "@/components/ui/button";
 import { TransactionDialog } from "@/components/TransactionDialog";
 import { CashDialog } from "@/components/CashDialog";
+import { DashboardCharts } from "@/components/DashboardCharts";
 import { usePortfolio, useRefreshPortfolio } from "@/lib/portfolio-data";
 import { money, num, pct } from "@/lib/format";
 
@@ -164,6 +165,8 @@ function Dashboard() {
             ))}
         </div>
       </div>
+
+      <DashboardCharts accounting={accounting} currency={currency} />
 
       <TransactionDialog
         open={txOpen}
