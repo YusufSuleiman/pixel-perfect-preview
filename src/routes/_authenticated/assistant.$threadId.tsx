@@ -46,16 +46,23 @@ function AssistantPage() {
 
   async function createThread() {
     const { data: auth } = await supabase.auth.getUser();
-    if (!auth.user) return;
+    if (!auth.user) return undefined;
     const { data, error } = await supabase.from("ai_conversations").insert({ user_id: auth.user.id }).select("id").single();
-    if (error || !data) return toast.error(error?.message ?? "Could not create a conversation");
+    if (error || !data) {
+      toast.error(error?.message ?? "Could not create a conversation");
+      return undefined;
+    }
     await qc.invalidateQueries({ queryKey: ["ai-conversations"] });
     navigate({ to: "/assistant/$threadId", params: { threadId: data.id } });
+    return undefined;
   }
 
   async function deleteThread(id: string) {
     const { error } = await supabase.from("ai_conversations").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     const remaining = (threads.data ?? []).filter((thread) => thread.id !== id);
     await qc.invalidateQueries({ queryKey: ["ai-conversations"] });
     if (id === threadId) {
@@ -80,7 +87,7 @@ function AssistantPage() {
           ))}
         </div>
       </aside>
-      <ChatWindow key={threadId} threadId={threadId} initialMessages={history.data ?? []} refreshThreads={() => qc.invalidateQueries({ queryKey: ["ai-conversations"] })} createThread={createThread} />
+      <ChatWindow key={threadId} threadId={threadId} initialMessages={history.data ?? []} refreshThreads={() => qc.invalidateQueries({ queryKey: ["ai-conversations"] })} createThread={async () => { await createThread(); }} />
     </div>
   );
 }
