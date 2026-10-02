@@ -12,12 +12,16 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedAssistantRouteImport } from './routes/_authenticated/assistant'
 import { Route as AuthenticatedCashRouteImport } from './routes/_authenticated/cash'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedHoldingsRouteImport } from './routes/_authenticated/holdings'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedTransactionsRouteImport } from './routes/_authenticated/transactions'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as AuthenticatedAssistantIndexRouteImport } from './routes/_authenticated/assistant.index'
+import { Route as AuthenticatedAssistantThreadIdRouteImport } from './routes/_authenticated/assistant.$threadId'
 import { Route as AuthenticatedStocksTickerRouteImport } from './routes/_authenticated/stocks.$ticker'
 
 const IndexRoute = IndexRouteImport.update({
@@ -33,6 +37,11 @@ const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAssistantRoute = AuthenticatedAssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedCashRoute = AuthenticatedCashRouteImport.update({
   id: '/cash',
@@ -65,6 +74,23 @@ const AuthenticatedTransactionsRoute =
     path: '/transactions',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAssistantIndexRoute =
+  AuthenticatedAssistantIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAssistantRoute,
+  } as any)
+const AuthenticatedAssistantThreadIdRoute =
+  AuthenticatedAssistantThreadIdRouteImport.update({
+    id: '/$threadId',
+    path: '/$threadId',
+    getParentRoute: () => AuthenticatedAssistantRoute,
+  } as any)
 const AuthenticatedStocksTickerRoute =
   AuthenticatedStocksTickerRouteImport.update({
     id: '/stocks/$ticker',
@@ -75,13 +101,17 @@ const AuthenticatedStocksTickerRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/assistant': typeof AuthenticatedAssistantRouteWithChildren
   '/cash': typeof AuthenticatedCashRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/holdings': typeof AuthenticatedHoldingsRoute
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
+  '/api/chat': typeof ApiChatRoute
+  '/assistant/$threadId': typeof AuthenticatedAssistantThreadIdRoute
   '/stocks/$ticker': typeof AuthenticatedStocksTickerRoute
+  '/assistant/': typeof AuthenticatedAssistantIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -92,33 +122,44 @@ export interface FileRoutesByTo {
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
+  '/api/chat': typeof ApiChatRoute
+  '/assistant/$threadId': typeof AuthenticatedAssistantThreadIdRoute
   '/stocks/$ticker': typeof AuthenticatedStocksTickerRoute
+  '/assistant': typeof AuthenticatedAssistantIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/assistant': typeof AuthenticatedAssistantRouteWithChildren
   '/_authenticated/cash': typeof AuthenticatedCashRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/holdings': typeof AuthenticatedHoldingsRoute
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/transactions': typeof AuthenticatedTransactionsRoute
+  '/api/chat': typeof ApiChatRoute
+  '/_authenticated/assistant/$threadId': typeof AuthenticatedAssistantThreadIdRoute
   '/_authenticated/stocks/$ticker': typeof AuthenticatedStocksTickerRoute
+  '/_authenticated/assistant/': typeof AuthenticatedAssistantIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/auth'
+    | '/assistant'
     | '/cash'
     | '/dashboard'
     | '/holdings'
     | '/reports'
     | '/settings'
     | '/transactions'
+    | '/api/chat'
+    | '/assistant/$threadId'
     | '/stocks/$ticker'
+    | '/assistant/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -129,25 +170,33 @@ export interface FileRouteTypes {
     | '/reports'
     | '/settings'
     | '/transactions'
+    | '/api/chat'
+    | '/assistant/$threadId'
     | '/stocks/$ticker'
+    | '/assistant'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/assistant'
     | '/_authenticated/cash'
     | '/_authenticated/dashboard'
     | '/_authenticated/holdings'
     | '/_authenticated/reports'
     | '/_authenticated/settings'
     | '/_authenticated/transactions'
+    | '/api/chat'
+    | '/_authenticated/assistant/$threadId'
     | '/_authenticated/stocks/$ticker'
+    | '/_authenticated/assistant/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ApiChatRoute: typeof ApiChatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -172,6 +221,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/assistant': {
+      id: '/_authenticated/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AuthenticatedAssistantRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/cash': {
       id: '/_authenticated/cash'
@@ -215,6 +271,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTransactionsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/assistant/': {
+      id: '/_authenticated/assistant/'
+      path: '/'
+      fullPath: '/assistant/'
+      preLoaderRoute: typeof AuthenticatedAssistantIndexRouteImport
+      parentRoute: typeof AuthenticatedAssistantRoute
+    }
+    '/_authenticated/assistant/$threadId': {
+      id: '/_authenticated/assistant/$threadId'
+      path: '/$threadId'
+      fullPath: '/assistant/$threadId'
+      preLoaderRoute: typeof AuthenticatedAssistantThreadIdRouteImport
+      parentRoute: typeof AuthenticatedAssistantRoute
+    }
     '/_authenticated/stocks/$ticker': {
       id: '/_authenticated/stocks/$ticker'
       path: '/stocks/$ticker'
@@ -225,7 +302,24 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedAssistantRouteChildren {
+  AuthenticatedAssistantThreadIdRoute: typeof AuthenticatedAssistantThreadIdRoute
+  AuthenticatedAssistantIndexRoute: typeof AuthenticatedAssistantIndexRoute
+}
+
+const AuthenticatedAssistantRouteChildren: AuthenticatedAssistantRouteChildren =
+  {
+    AuthenticatedAssistantThreadIdRoute: AuthenticatedAssistantThreadIdRoute,
+    AuthenticatedAssistantIndexRoute: AuthenticatedAssistantIndexRoute,
+  }
+
+const AuthenticatedAssistantRouteWithChildren =
+  AuthenticatedAssistantRoute._addFileChildren(
+    AuthenticatedAssistantRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAssistantRoute: typeof AuthenticatedAssistantRouteWithChildren
   AuthenticatedCashRoute: typeof AuthenticatedCashRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedHoldingsRoute: typeof AuthenticatedHoldingsRoute
@@ -236,6 +330,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAssistantRoute: AuthenticatedAssistantRouteWithChildren,
   AuthenticatedCashRoute: AuthenticatedCashRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedHoldingsRoute: AuthenticatedHoldingsRoute,
@@ -252,6 +347,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ApiChatRoute: ApiChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
